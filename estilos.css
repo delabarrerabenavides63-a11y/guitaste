@@ -1,0 +1,385 @@
+/*
+  Guitaste · hoja de estilos
+  Decisiones (11/11/2026):
+  - Colores B: blanco cálido con acento color madera (guitarra sunburst).
+  - Cabecera A: fija arriba, de cristal esmerilado (translúcida con desenfoque).
+  - Movimiento B: el botón se hunde al pulsarlo; la tarjeta de producto sube 2 px al pasar el ratón.
+  - Letra del sistema (sin descargas), tracking negativo en titulares grandes.
+  - Sin animaciones al hacer scroll. Modo oscuro automático si el dispositivo lo usa.
+  Solo selectores de etiqueta: el HTML no lleva clases.
+*/
+
+:root {
+  --bg: #fbfaf8;
+  --surface: #ffffff;
+  --fg: #231c16;
+  --muted: #6f655c;
+  --line: #e6e0d9;
+  --accent: #9a4f17;
+  --accent-hover: #833f0e;
+  --accent-ink: #ffffff;
+  --shadow: 0 1px 2px rgba(35, 28, 22, .04), 0 8px 24px rgba(35, 28, 22, .06);
+  --shadow-up: 0 2px 4px rgba(35, 28, 22, .05), 0 14px 34px rgba(35, 28, 22, .10);
+
+  --col: 44rem;           /* ancho de lectura (~70 caracteres) */
+  --radius: 18px;
+  --radius-sm: 12px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --press: .97;
+
+  color-scheme: light;
+  scroll-padding-top: 7rem; /* los enlaces a #producto no quedan bajo la cabecera */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141210;
+    --surface: #1e1b18;
+    --fg: #f3eee8;
+    --muted: #a99f94;
+    --line: #332e29;
+    --accent: #e09a5c;
+    --accent-hover: #eaae78;
+    --accent-ink: #1a1006;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+    --shadow-up: 0 2px 4px rgba(0, 0, 0, .35), 0 14px 34px rgba(0, 0, 0, .35);
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 1.0625rem/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Cabecera de cristal ---------- */
+
+body > header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: .75rem;
+  padding-block: .7rem 0;
+  padding-inline: max(1rem, calc((100% - var(--col)) / 2));
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--line) 80%, transparent);
+}
+
+body > header > a {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+body > header > p {
+  margin: 0;
+  font-size: .85rem;
+  color: var(--muted);
+}
+
+body > header nav {
+  flex-basis: 100%;
+  min-width: 0; /* sin esto el menú ensancha la página en móvil */
+  margin-inline: -.5rem; /* las píldoras quedan alineadas con el texto */
+}
+
+body > header nav ul {
+  display: flex;
+  gap: .25rem;
+  margin: 0;
+  padding: .45rem 0 .55rem;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+body > header nav ul::-webkit-scrollbar { display: none; }
+
+body > header nav a {
+  display: block;
+  white-space: nowrap;
+  padding: .35rem .75rem;
+  border-radius: 999px;
+  font-size: .88rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  transition: background-color 150ms ease-out, color 150ms ease-out, transform 100ms ease-out;
+}
+body > header nav a:hover { color: var(--fg); background: color-mix(in srgb, var(--fg) 6%, transparent); }
+body > header nav a:active { transform: scale(var(--press)); }
+body > header nav a[aria-current="page"] {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+@media (max-width: 30rem) {
+  body > header > p { display: none; }
+  /* el borde derecho se difumina: indica que el menú se desliza */
+  body > header nav ul {
+    -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
+    mask-image: linear-gradient(to right, #000 85%, transparent);
+    padding-right: 2rem;
+  }
+}
+
+/* ---------- Columna de lectura ---------- */
+
+main {
+  width: min(100% - 2rem, var(--col));
+  margin-inline: auto;
+  padding-block: 2rem 4rem;
+}
+
+main section { margin-block: 3.5rem; }
+main > section:first-child,
+main > article > section:first-of-type { margin-top: 2.5rem; }
+
+nav[aria-label="Ruta"] {
+  font-size: .85rem;
+  color: var(--muted);
+}
+
+/* ---------- Tipografía ---------- */
+
+h1, h2, h3, h4 { text-wrap: balance; color: var(--fg); }
+
+h1 {
+  font-size: clamp(2.1rem, 1.4rem + 3vw, 3.1rem);
+  line-height: 1.06;
+  letter-spacing: -.035em;
+  font-weight: 700;
+  margin: .5rem 0 1rem;
+}
+
+h2 {
+  font-size: clamp(1.55rem, 1.3rem + 1vw, 1.95rem);
+  line-height: 1.15;
+  letter-spacing: -.025em;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+h3 {
+  font-size: 1.28rem;
+  line-height: 1.25;
+  letter-spacing: -.015em;
+  font-weight: 650;
+  margin: 2rem 0 .5rem;
+}
+
+h4 {
+  font-size: .78rem;
+  line-height: 1.3;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  font-weight: 650;
+  color: var(--muted);
+  margin: 1.4rem 0 .4rem;
+}
+
+p { margin: 0 0 1rem; }
+strong { font-weight: 650; }
+
+article > header p,
+time { font-size: .9rem; color: var(--muted); }
+
+ul { padding-left: 1.2rem; margin: 0 0 1rem; }
+li { margin-block: .25rem; }
+li::marker { color: var(--accent); }
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: .18em;
+  transition: color 150ms ease-out;
+}
+a:hover { color: var(--accent-hover); }
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Enlaces a cada guía en la portada: texto con flecha */
+main > section > a {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+main > section > a::after {
+  content: "→";
+  transition: transform 200ms var(--ease);
+}
+main > section > a:hover::after { transform: translateX(3px); }
+
+/* ---------- Imágenes y vídeo ---------- */
+
+figure { margin: 1.5rem 0; }
+
+figure img,
+figure video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  background: var(--line);
+}
+
+figure img { max-height: 32rem; object-fit: cover; }
+
+figcaption {
+  margin-top: .6rem;
+  font-size: .88rem;
+  color: var(--muted);
+}
+
+/* ---------- Tarjetas de producto ---------- */
+
+article[id] {
+  margin-block: 1.5rem;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) + 6px);
+  box-shadow: var(--shadow);
+  transition: transform 260ms var(--ease), box-shadow 260ms var(--ease);
+}
+
+@media (hover: hover) {
+  article[id]:hover { transform: translateY(-2px); box-shadow: var(--shadow-up); }
+}
+
+@media (max-width: 30rem) {
+  article[id] { padding: 1.1rem; }
+}
+
+article[id] > h3 { margin-top: 0; }
+article[id] > figure { margin: 1rem -.5rem; }
+article[id] > p:last-child { margin: 1.5rem 0 0; }
+
+/* Botón «Ver precio en Amazon» (todos los enlaces de afiliado) */
+a[rel~="sponsored"] {
+  display: inline-block;
+  padding: .75rem 1.3rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: .95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background-color 150ms ease-out, transform 100ms ease-out;
+}
+a[rel~="sponsored"]:hover { background: var(--accent-hover); color: var(--accent-ink); }
+a[rel~="sponsored"]:active { transform: scale(var(--press)); }
+
+/* ---------- Tabla comparativa ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .93rem;
+  font-variant-numeric: tabular-nums;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+caption {
+  caption-side: bottom;
+  text-align: left;
+  padding-top: .6rem;
+  font-size: .85rem;
+  color: var(--muted);
+}
+
+th, td {
+  padding: .7rem .85rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  font-size: .75rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-weight: 650;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--line) 35%, var(--surface));
+}
+
+tbody tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 600; }
+
+/* En móvil: celdas más compactas, el texto parte línea en vez de ensanchar la página */
+@media (max-width: 40rem) {
+  table { font-size: .85rem; }
+  th, td { padding: .6rem .4rem; hyphens: auto; }
+  th:first-child, td:first-child { padding-left: .65rem; }
+  th { font-size: .78rem; letter-spacing: 0; text-transform: none; }
+  td:last-child { white-space: nowrap; }
+}
+
+/* Móviles muy estrechos: la tabla se desliza de lado dentro de su caja, la página no */
+@media (max-width: 22rem) {
+  table { display: block; overflow-x: auto; }
+}
+
+/* ---------- Otras guías y pie ---------- */
+
+aside {
+  margin-top: 3.5rem;
+  padding: 1.5rem;
+  border-radius: calc(var(--radius) + 6px);
+  background: color-mix(in srgb, var(--accent) 7%, var(--bg));
+}
+aside h2 { font-size: 1.25rem; letter-spacing: -.015em; }
+aside ul { list-style: none; padding: 0; margin: 0; }
+aside li { margin-block: .5rem; }
+aside a { font-weight: 600; text-decoration: none; }
+aside a:hover { text-decoration: underline; }
+
+body > footer {
+  padding-block: 2rem 3rem;
+  padding-inline: max(1rem, calc((100% - var(--col)) / 2));
+  border-top: 1px solid var(--line);
+  font-size: .85rem;
+  color: var(--muted);
+}
+body > footer p { margin: 0 0 .4rem; }
+body > footer p:first-child { font-weight: 600; color: var(--fg); }
+body > footer a { color: var(--muted); }
+
+/* ---------- Accesibilidad ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+  article[id]:hover { transform: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  body > header { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+@media (prefers-contrast: more) {
+  :root { --muted: var(--fg); --line: var(--fg); }
+  body > header { background: var(--bg); backdrop-filter: none; }
+}
